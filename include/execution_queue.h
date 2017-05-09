@@ -1,4 +1,4 @@
 #include "cdata.h"
 
-* TCB_t removeThreadFromExecutionQueue();
-addThreadToExecutionQueue(* TCB_t thread);
+TCB_t * removeThreadFromExecutionQueue();
+int addThreadToExecutionQueue(TCB_t * thread);

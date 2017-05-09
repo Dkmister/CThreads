@@ -31,7 +31,7 @@ regran: #dependências para a regran
 	$(CC) -o $(BIN_DIR)regran $(SRC_DIR)regran.c -Wall
 
 short_scheduler: #dependências para a regran
-	$(CC) $(SRC_DIR)/short_scheduler.c -c -o $(BIN_DIR)short_scheduler -Wall
+	$(CC) $(SRC_DIR)/short_scheduler.c -c -o $(BIN_DIR)/short_scheduler -Wall
 
 ready_queue_mock:
 	$(CC) $(MOCKS_DIR)/ready_queue.c -c -o $(MOCKS_BIN_DIR)/ready_queue  -Wall
