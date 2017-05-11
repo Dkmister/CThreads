@@ -4,15 +4,26 @@
 #include <stdlib.h>
 
 void funcaoContext(){
-  printf("\nSou a função de teste para contextos!\n");
+  printf("Esta função é executada pelo thread mock da fila de aptos!");
+  exit(1);
 }
 
-void terminoFuncaoContext(){
-  printf("\nTerminei de executar a função de teste de contextos!");
+TCB_t * createMockThread(){
+  char stack[8192];
+  TCB_t * thread = malloc(sizeof(TCB_t));
+  ucontext_t * context = malloc(sizeof(ucontext_t));
+  getcontext(context);
+  context->uc_stack.ss_sp = stack;
+  context->uc_stack.ss_size = sizeof(stack);
+  context->uc_link = NULL;
+  makecontext(context, funcaoContext, 0);
+  thread->context = (*context);
+  thread->tid = 1;
+  return thread;
 }
 
 TCB_t * removeThreadFromReadyQueue(int tid){
-  return malloc(sizeof(TCB_t));
+  return createMockThread();
 }
 
 int addThreadToReadyQueue(TCB_t * thread){
@@ -20,16 +31,5 @@ int addThreadToReadyQueue(TCB_t * thread){
 }
 
 TCB_t * getNextThreadToExecute(){
-  char stack[8192];
-  printf("Retornando a próxima thread");
-  TCB_t * thread = malloc(sizeof(TCB_t));
-  ucontext_t * context = malloc(sizeof(ucontext_t));
-  getcontext(context);
-  context->uc_stack.ss_sp = stack;
-  context->uc_stack.ss_size = sizeof stack;
-  context->uc_link = terminoFuncaoContext;
-  makecontext(context, funcaoContext, 0);
-  thread->context = *context;
-  thread->tid = 0;
-  return thread;
+  return createMockThread();
 }

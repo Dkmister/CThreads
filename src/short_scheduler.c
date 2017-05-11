@@ -10,10 +10,13 @@ void executeNextThread(){
   TCB_t * nextThread = getNextThreadToExecute(); //Pede a próxima thread a ser executada para a fila de aptos
   removeThreadFromReadyQueue(nextThread->tid); //Remove a próxima thread da fila de aptos
   addThreadToExecutionQueue(nextThread); //Adiciona a nova thread na fila de execução
+
+
   if(oldExecutingThread != NULL){ //Se havia uma thread em execução
     addThreadToReadyQueue(oldExecutingThread); //Adiciona a antiga thread na fila de aptos
     getcontext(&oldExecutingThread->context); //Salva o contexto atual na antiga thread
   }
+
   int * isReturningFromExecution = malloc(sizeof(int)); //Flag para saber se estamos retornando do contexto salv na antiga thread
   *isReturningFromExecution = 0;
   if(!*isReturningFromExecution){ //Se não estiver voltando o contexto
