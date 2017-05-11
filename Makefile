@@ -31,17 +31,28 @@ regra2: #dependências para a regra2
 regran: #dependências para a regran
 	$(CC) -o $(BIN_DIR)regran $(SRC_DIR)regran.c -Wall
 
-my_test: ready_queue_mock short_scheduler execution_queue
-	$(CC) $(TEST_DIR)/my_test.c $(BIN_DIR)/short_scheduler $(BIN_DIR)/execution_queue $(MOCKS_BIN_DIR)/ready_queue -o $(TEST_BIN_DIR)/my_test -Wall
+short_scheduler:
+	$(CC) $(SRC_DIR)/short_scheduler.c -c -o $(BIN_DIR)/short_scheduler -Wall
 
 execution_queue:
 	$(CC) $(SRC_DIR)/execution_queue.c -c -o $(BIN_DIR)/execution_queue -Wall
 
-short_scheduler: #dependências para a regran
-	$(CC) $(SRC_DIR)/short_scheduler.c -c -o $(BIN_DIR)/short_scheduler -Wall
+#------------------------_TESTES_---------------------------
 
-ready_queue_mock:
-	$(CC) $(MOCKS_DIR)/ready_queue.c -c -o $(MOCKS_BIN_DIR)/ready_queue  -Wall
+my_test: ready_queue_mock short_scheduler execution_queue_mock thread_mock
+	$(CC) $(TEST_DIR)/my_test.c $(BIN_DIR)/short_scheduler $(MOCKS_BIN_DIR)/execution_queue $(MOCKS_BIN_DIR)/ready_queue $(MOCKS_BIN_DIR)/thread -o $(TEST_BIN_DIR)/my_test -Wall
 
+
+#------------------------_MOCKS_-------------------------------
+
+ready_queue_mock: thread_mock
+	$(CC) $(MOCKS_DIR)/ready_queue.c -c -o $(MOCKS_BIN_DIR)/ready_queue -Wall
+
+execution_queue_mock: thread_mock
+	$(CC) $(MOCKS_DIR)/execution_queue.c -c -o $(MOCKS_BIN_DIR)/execution_queue -Wall
+
+thread_mock:
+	$(CC) $(MOCKS_DIR)/thread.c -c -o $(MOCKS_BIN_DIR)/thread -Wall
+#-------------------------_clean_--------------------------------
 clean:
 	rm -rf $(LIB_DIR)/*.a $(BIN_DIR)/*.o $(SRC_DIR)/*~ $(INC_DIR)/*~ *~
