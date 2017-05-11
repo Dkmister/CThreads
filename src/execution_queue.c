@@ -1,4 +1,6 @@
 #include "../include/cdata.h"
+#include <stdlib.h>
+
 
 TCB_t * currentThreadOnExecution;
 
@@ -7,7 +9,7 @@ TCB_t * currentThreadOnExecution;
   para a sua estrutura TCB.
 */
 TCB_t * removeThreadFromExecutionQueue(){
-  TCB_t thread = currentThreadOnExecution; //Salva a referencia à atual thread
+  TCB_t * thread = currentThreadOnExecution; //Salva a referencia à atual thread
   currentThreadOnExecution = NULL; //Remove a thread atual
   return thread; //Retorna a referencia da thread retirada
 }
@@ -16,7 +18,7 @@ TCB_t * removeThreadFromExecutionQueue(){
   Função que adiciona uma thread na fila de execução.
   Caso haja algum erro, retorna -1;
 */
-void addThreadToExecutionQueue(TCB_t * thread){
+int addThreadToExecutionQueue(TCB_t * thread){
   if(currentThreadOnExecution != NULL){ //Se ja existe uma thread
     return -1; //Retornar erro
   }

@@ -7,6 +7,10 @@ void funcaoContext(){
   printf("\nSou a função de teste para contextos!\n");
 }
 
+void terminoFuncaoContext(){
+  printf("\nTerminei de executar a função de teste de contextos!");
+}
+
 TCB_t * removeThreadFromReadyQueue(int tid){
   return malloc(sizeof(TCB_t));
 }
@@ -16,9 +20,15 @@ int addThreadToReadyQueue(TCB_t * thread){
 }
 
 TCB_t * getNextThreadToExecute(){
+  char stack[8192];
+  printf("Retornando a próxima thread");
   TCB_t * thread = malloc(sizeof(TCB_t));
   ucontext_t * context = malloc(sizeof(ucontext_t));
-  makecontext(context, (void*)funcaoContext, 0);
+  getcontext(context);
+  context->uc_stack.ss_sp = stack;
+  context->uc_stack.ss_size = sizeof stack;
+  context->uc_link = terminoFuncaoContext;
+  makecontext(context, funcaoContext, 0);
   thread->context = *context;
   thread->tid = 0;
   return thread;

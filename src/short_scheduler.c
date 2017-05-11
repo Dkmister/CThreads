@@ -16,7 +16,7 @@ void executeNextThread(){
   }
   int * isReturningFromExecution = malloc(sizeof(int)); //Flag para saber se estamos retornando do contexto salv na antiga thread
   *isReturningFromExecution = 0;
-  if(!isReturningFromExecution){ //Se não estiver voltando o contexto
+  if(!*isReturningFromExecution){ //Se não estiver voltando o contexto
     *isReturningFromExecution = 1; //Seta a flag para que, na próxima vez, saibamos que estamos voltando do contexto
     setcontext(&nextThread->context); //Executa o contexto da próxima thread
   }
