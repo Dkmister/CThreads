@@ -8,7 +8,7 @@
 Escalonador de Medio Prazo usara as seguintes filas:
 
 execution_queue
-blocked_queue
+blocking_queue
 ready_queue
 
 
@@ -28,7 +28,7 @@ Existem dois casos:
 int BlockCurrentThread()
 {
   TCB_t * currentThread = removeFirstThreadFromExecutionQueue();
-  addThreadtoBlockedQueue(currentThread);
+  addThreadtoBlockingQueue(currentThread);
   getcontext(&currentThread->context);
   if(currentThread == NULL){
     return 0;
@@ -36,7 +36,7 @@ int BlockCurrentThread()
   setcontext(&currentThread->context);
   return 1;
 
-};
+}
 /*
 void UnblockThread(int tid):
 
@@ -51,7 +51,7 @@ Existem dois casos:
 
 int UnblockThread(int tid)
 {
-  TCB_t * firstThread = removeThreadFromBlockedQueue(tid);
+  TCB_t * firstThread = removeThreadFromBlockingQueue(tid);
   addThreadtoReadyQueue(firstThread);
   getcontext(&firstThread->context);
   if(firstThread == NULL){
@@ -59,4 +59,4 @@ int UnblockThread(int tid)
   }
   setcontext(&firstThread->context);
   return 1;
-};
+}
