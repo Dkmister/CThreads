@@ -4,7 +4,9 @@
 
 TCB_t * currentThreadOnExecution;
 
-AddThreadToBlockingQueue(TCB_t * thread)
+// Funcao que adiciona thread na fila de bloqueados
+// Retorna -1 caso haja erro, 0 se der tudo certo.
+int AddThreadToBlockingQueue(TCB_t * thread)
 {
   if(currentThreadOnExecution != NULL)
   {
@@ -12,4 +14,16 @@ AddThreadToBlockingQueue(TCB_t * thread)
   }
   currentThreadOnExecution = thread;
   return 0;
+}
+
+
+TCB_t * RemoveThreadFromBlockingQueue(int tid)
+{
+  TCB_t * thread = currentThreadOnExecution;
+
+  if(thread->tid = tid)
+  {
+    currentThreadOnExecution = NULL; //Remove a thread atual
+    return thread; //Retorna a referencia da thread retirada
+  }
 }
