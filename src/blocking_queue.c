@@ -21,9 +21,12 @@ TCB_t * RemoveThreadFromBlockingQueue(int tid)
 {
   TCB_t * thread = currentThreadOnExecution;
 
-  if(thread->tid = tid)
-  {
+  currentThreadOnExecution = findreferencedThread(tid);
+  currentThreadOnExecution = NULL; //Remove a thread atual
+  return thread; //Retorna a referencia da thread retirada
+  /*
+  if(thread->tid == tid){ 
     currentThreadOnExecution = NULL; //Remove a thread atual
     return thread; //Retorna a referencia da thread retirada
-  }
+  }*/
 }
