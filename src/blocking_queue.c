@@ -1,19 +1,26 @@
 #include "../include/cdata.h"
+#include "../include/support.h"
 #include <stdlib.h>
 #include <stddef.h>
+
+#define SUCESSO 1
+#define FRACASSO 0
+PFILA2 threadsBlocked = NULL; //nao sei se é necessário fazer essa declaração
+CreateFila2(PFILA2 threadsBlocked);
 
 TCB_t * currentThreadOnExecution;
 
 // Funcao que adiciona thread na fila de bloqueados
-// Retorna -1 caso haja erro, 0 se der tudo certo.
+// Retorna 0 caso haja erro, 1 se der tudo certo.
 int AddThreadToBlockingQueue(TCB_t * thread)
 {
-  if(currentThreadOnExecution != NULL)
-  {
-    return -1;
-  }
-  currentThreadOnExecution = thread;
-  return 0;
+  int ret; // Referente a analise da funcao de AppendFila2, se der 0, a funcao funcionou, caso contrario nao
+  thread->state = PROCST_BLOQ; // declara que a thread agora esta na fila de bloqueados
+  ret = AppendFila2(threadsBlocked,thread);
+  if(ret == 0)
+    return SUCESSO;
+  else
+    return FRACASSO;
 }
 
 
@@ -25,7 +32,7 @@ TCB_t * RemoveThreadFromBlockingQueue(int tid)
   currentThreadOnExecution = NULL; //Remove a thread atual
   return thread; //Retorna a referencia da thread retirada
   /*
-  if(thread->tid == tid){ 
+  if(thread->tid == tid){
     currentThreadOnExecution = NULL; //Remove a thread atual
     return thread; //Retorna a referencia da thread retirada
   }*/
