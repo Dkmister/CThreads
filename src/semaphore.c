@@ -14,21 +14,26 @@ typedef struct threadSemaphore {
 
 int newSemaphore(csem_t * semaphore, int maxThreadsOnResource){
   PFILA2 fila;
-  CreateFila2(fila);
+  if(!CreateFila2(fila)){ //inicializa uma fila
+    return ERROR;
+  }
   csem_t newSemaphore = malloc(sizeof(csem_t));
-  newSemaphore->count = maxThreadsOnResource;
+  newSemaphore->count = maxThreadsOnResource; //inicializa o contador do semáforo
   newSemaphore->fila = fila;
-  return semaphore;
+  return SUCCESS;
 }
 
 int waitOnSemaphore(csem_t * semaphore){
-  if(semaphore->count > 0){
-    semaphore->count = semaphore->count - 1;
-  } else {
-    TCB_t * currentThread = getCurrentThread();
-    AppendFila2(semaphore->fila, (void*)currentThread);
-    BlockCurrentThread();
+  if(semaphore->count > 0){ //Se o semáforo ainda puder ser decrementado (recurso pode ser alocado)
+    semaphore->count = semaphore->count - 1; //Decrementa o contador do semáforo
+  } else { //Se o semáforo ja estiver ocupado (recurso não pode mais ser alocado)
+    TCB_t * currentThread = getCurrentThread(); //pega a thread atualmente em execução
+    if(!AppendFila2(semaphore->fila, (void*)currentThread)){ //Coloca a thread na fila de espera do semáforo
+      return ERROR;
+    }
+    BlockCurrentThread(); //Bloqueia a thread atual e executa a próxima
   }
+  return SUCCESS;
 }
 
 int releaseSemaphore(csem_t semaphore){
