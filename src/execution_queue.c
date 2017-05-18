@@ -23,6 +23,7 @@ int addThreadToExecutionQueue(TCB_t * thread){
     return -1; //Retornar erro
   }
   currentThreadOnExecution = thread; //Seta a nova thread
+  currentThreadOnExecution->state = 2; //EXECUÇÂO
   return 0; //Retornar sucesso
 }
 
