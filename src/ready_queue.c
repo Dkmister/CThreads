@@ -1,37 +1,51 @@
-#include "cdata.h"
+#include "../include/cdata.h"
+#include "../include/cthread.h"
+#include "../include/support.h"
 #include <stdlib.h>
 
 
 
 //  sao criadas as filas aqui mesmo
 //  ou aqui só tem funções e as filas ficam sei la onde?
+  PFILA2 pFilap0;
+	PFILA2 pFilap1;
+	PFILA2 pFilap2;
+	PFILA2 pFilap3;
 
-	CreateFila2(PFILA2 pFilap0);
-	CreateFila2(PFILA2 pFilap1);
-	CreateFila2(PFILA2 pFilap2);
-  CreateFila2(PFILA2 pFilap3);
+	FILA2 Filap0;
+	FILA2 Filap1;
+	FILA2 Filap2;
+	FILA2 Filap3;
+
+	int a, b, c, d;
+
+	a = CreateFila2(pFilap0);
+	b = CreateFila2(pFilap1);
+	c = CreateFila2(pFilap2);
+  d = CreateFila2(pFilap3);
     
 
 
-/*
 
-TCB_t * removeThreadFromReadyQueue(int tid);
-*/
+
 
 
 //-----  REVISAR -----
-int * addThreadToReadyQueue(TCB_t * thread)
+int addThreadToReadyQueue(TCB_t * thread)
 {
   
   // muda o estado da thread para apto
-  *thread->state = 1;
+  thread->state = 1;
   
 	
 	
 	/* retorna -1 se der erro
 		 retorn 0 se conseguir
 	*/
-  switch(*thread->ticket)
+
+
+
+  switch(thread->ticket)
   {
       // caso prioridade é 0
     case 0:
@@ -51,7 +65,7 @@ int * addThreadToReadyQueue(TCB_t * thread)
       
       // caso prioridade é 3
     case 3:
-      if(AppendFila2(pFilap3, thread) == o);
+      if(AppendFila2(pFilap3, thread) == 0);
       break;
       
       // caso tenha um valor diferente para a prioridade 
@@ -60,42 +74,7 @@ int * addThreadToReadyQueue(TCB_t * thread)
   }
   
   return 0;
-  }
-  
-/*
-
-switch(*thread->ticket)
-  {
-      // caso prioridade é 0
-    case 0:
-      
-      break;
-      
-      // caso prioridade é 1
-    case 1:
-      
-      break;
-      
-      // caso prioridade é 2
-    case 2:
-      
-      break;
-      
-      // caso prioridade é 3
-    case 3:
-      
-      break;
-      
-      // caso tenha um valor diferente para a prioridade 
-    default:
-      return -1;
-  }
-  
-  return 0;
-  }
-
-
-*/
+}
 
 /* 
 		TCB_t * getNextThreadToExecute():
@@ -103,12 +82,14 @@ switch(*thread->ticket)
     se conseguir retorna uma a thread de acordo com a prioridade dela
 		se não conseguir retorna null;
 */
+
+
   TCB_t * getNextThreadToExecute()
   {
 		
 		TCB_t * threadToLeave;
 		
-		//CADA DTESTE DE IF VERIFICA SE A FILA ESTÁ VAZIA
+		//CADA TESTE DE IF VERIFICA SE A FILA ESTÁ VAZIA
 		//SE FOR DIFERENTE DE 0 SIGNIFICA QUE A LISTA ESTA VAZIA OU DEU ERRO
 		//
 		//
@@ -119,7 +100,7 @@ switch(*thread->ticket)
 		
 		if(FirstFila2(pFilap0) == 0)
 		{
-			threadToLeave = *GetAtIteratorFila2(pFilap0);
+			threadToLeave = GetAtIteratorFila2(pFilap0);
 			
 			DeleteAtIteratorFila2(pFilap0);
 				
@@ -128,7 +109,7 @@ switch(*thread->ticket)
 	
 		}else if(FirstFila2(pFilap1) == 0)
 		  {
-			 threadToLeave = *GetAtIteratorFila2(pFilap1);
+			 threadToLeave = GetAtIteratorFila2(pFilap1);
 				
 			 DeleteAtIteratorFila2(pFilap0);
 				
@@ -136,7 +117,7 @@ switch(*thread->ticket)
 	
 		  }else if(FirstFila2(pFilap2) == 0)
 			  {
-			   	threadToLeave = *GetAtIteratorFila2(pFilap2);
+			   	threadToLeave = GetAtIteratorFila2(pFilap2);
 					
 					DeleteAtIteratorFila2(pFilap0);
 				
@@ -144,7 +125,7 @@ switch(*thread->ticket)
 	
 		  	}else if(FirstFila2(pFilap3) == 0)
 				  {
-						threadToLeave = *GetAtIteratorFila2(pFilap3);
+						threadToLeave = GetAtIteratorFila2(pFilap3);
 						
 						DeleteAtIteratorFila2(pFilap0);
 				
@@ -152,9 +133,11 @@ switch(*thread->ticket)
 						
 			  	}else
 					{
-						return null;
+						return NULL;
 					}
-    
+	}
+
+
     /*
 		DO:iterador no primeiro da fila
 			FirstFila2(PFILA2 pFila);
@@ -171,24 +154,121 @@ switch(*thread->ticket)
 			
 			ou:
 			return threadToLeave;
+  	*/
+
+/*
+	REMOVE THREAD DA READY QUEUE:
+	
+	TCB_t * ThreadParaRemover
+	
+	Para cada fila fazer:
+	
+	// seta iterador no primeiro elemento da fila
+	FIRSTFILA2(pFila);
+	
+	// varre a fila até encontrar o elemento
+	do
+	{
+		// ThreadParaRemover recebe o valor do iterador
+		ThreadParaRemover = GetAtIteratorFila2(pFila)
 		
+		// se tid parametro é igual ao tid da thread atual no iterador:
+		if(*ThreadParaRemover->tid == tid)
+		{
+			// deleta o elemento na fila
+			DeleteAtIteratorFila2(pFila);
+			
+			// retorna a thread deletada
+			return ThreadParaRemover;
+		}
 		
-		*/
-  }
-  
+	}while(NextFila2(pFila) == 0);
+
+*/
+
+
 
 TCB_t * removeThreadFromReadyQueue(int tid)
 {
 	
+		TCB_t *ThreadToRemove;
 	
 	
 	
+	// ----- FILA DE PRIORIDADE 0 -----
+		FirstFila2(pFilap0);
+	
+	do
+	{
+		ThreadToRemove = GetAtIteratorFila2(pFilap0);
+		
+		if(ThreadToRemove->tid == tid)
+		{
+			DeleteAtIteratorFila2(pFilap0);
+			
+			return ThreadToRemove;
+			
+		}
+		
+	}while(NextFila2(pFilap0) == 0);
 	
 	
+		
 	
+	// ----- FILA DE PRIORIDADE 1 -----
+		FirstFila2(pFilap1);
 	
-}
-  
-  
-  
-}
+	do
+	{
+		ThreadToRemove = GetAtIteratorFila2(pFilap1);
+		
+		if(ThreadToRemove->tid == tid)
+		{
+			DeleteAtIteratorFila2(pFilap1);
+			
+			return ThreadToRemove;
+			
+		}
+		
+	}while(NextFila2(pFilap1) == 0);
+		
+		
+		
+
+	// ----- FILA DE PRIORIDADE 2 -----
+		FirstFila2(pFilap2);
+	
+	do
+	{
+		ThreadToRemove = GetAtIteratorFila2(pFilap2);
+		
+		if(ThreadToRemove->tid == tid)
+		{
+			DeleteAtIteratorFila2(pFilap2);
+			
+			return ThreadToRemove;
+			
+		}
+		
+	}while(NextFila2(pFilap2) == 0);
+		
+		
+		
+		
+	// ----- FILA DE PRIORIDADE 3 -----
+		FirstFila2(pFilap3);
+	
+	do
+	{
+		ThreadToRemove = GetAtIteratorFila2(pFilap3);
+		
+		if(ThreadToRemove->tid == tid)
+		{
+			DeleteAtIteratorFila2(pFilap3);
+			
+			return ThreadToRemove;
+			
+		}
+		
+	}while(NextFila2(pFilap3) == 0);
+}  
