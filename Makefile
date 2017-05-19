@@ -37,6 +37,9 @@ short_scheduler:
 execution_queue:
 	$(CC) $(SRC_DIR)/execution_queue.c -c -o $(BIN_DIR)/execution_queue -Wall
 
+semaphore:
+	$(CC) $(SRC_DIR)/semaphore.c -c -o $(BIN_DIR)/semaphore -Wall
+
 #------------------------_TESTES_---------------------------
 
 my_test: ready_queue_mock short_scheduler execution_queue_mock thread_mock

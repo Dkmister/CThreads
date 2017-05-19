@@ -3,6 +3,7 @@
 #include "../include/execution_queue.h"
 #include "../include/short_scheduler.h"
 #include "../include/errors.h"
+#include <stdlib.h>
 // #include "../include/.medium_term_scheduler.h"
 
 PFILA2 threadSemaphores = NULL;
@@ -17,7 +18,7 @@ int newSemaphore(csem_t * semaphore, int maxThreadsOnResource){
   if(!CreateFila2(fila)){ //inicializa uma fila
     return ERROR;
   }
-  csem_t newSemaphore = malloc(sizeof(csem_t));
+  csem_t * newSemaphore = malloc(sizeof(csem_t));
   newSemaphore->count = maxThreadsOnResource; //inicializa o contador do semáforo
   newSemaphore->fila = fila;
   return SUCCESS;
@@ -36,14 +37,15 @@ int waitOnSemaphore(csem_t * semaphore){
   return SUCCESS;
 }
 
-int releaseSemaphore(csem_t semaphore){
+int releaseSemaphore(csem_t * semaphore){
   semaphore->count = semaphore->count + 1;
   if(LastFila2(semaphore->fila)){
     TCB_t * waitingThread = (TCB_t *)GetAtIteratorFila2(semaphore->fila); //Testar por erro
     semaphore->count = semaphore->count - 1;
     UnblockThread(waitingThread->tid);
-    DeleteAtIteratorFila2(fila); //Testar por erro
+    DeleteAtIteratorFila2(semaphore->fila); //Testar por erro
   }
+  return SUCCESS;
 }
 
 int waitOnThread(int tid){
@@ -51,7 +53,7 @@ int waitOnThread(int tid){
     CreateFila2(threadSemaphores); //inicializa a fila
   }
   csem_t * semaphore;
-  if(searchThreadSemaphore(tid, semaphore) == ERROR{ //Procura a estrutura de semáforo referente à thread referenciada por tid;
+  if(!searchThreadSemaphore(tid, semaphore)){ //Procura a estrutura de semáforo referente à thread referenciada por tid;
     return ERROR; //Se houver erro, retorna erro
   }
   semaphore->count = semaphore->count - 1; //Decrementa o contador do semáforo
@@ -65,14 +67,14 @@ int waitOnThread(int tid){
 }
 
 int releaseThread(int tid){
-  csem_t semaphore;
+  csem_t * semaphore;
   if(searchThreadSemaphore(tid, semaphore) == ERROR){ //Procura a thread na fila de semáforos
     return ERROR;
   }
   if(FirstFila2(semaphore->fila)){
     while(FirstFila2(semaphore->fila)){ //Para cada thread esperando por ela
       TCB_t * thread = (TCB_t *)GetAtIteratorFila2(semaphore->fila);
-      UnblockThread(thread) //Desbloquear (adicionar à fila de aptos)
+      UnblockThread(thread); //Desbloquear (adicionar à fila de aptos)
     }
   } else {
     return ERROR;
@@ -84,7 +86,7 @@ int searchThreadSemaphore(int tid, csem_t * semaphore){
   if(FirstFila2(threadSemaphores)){ //Se a fila não estiver vazia
     threadSemaphore * thSemaphore;
     do{ //Itera na fila até achar o semáforo
-      thSemaphore = GetAtIteratorFila2();
+      thSemaphore = GetAtIteratorFila2(thSemaphore->semaphore->fila);
       if(thSemaphore->threadTid == tid){ //Se achou a estrutura da thread
         semaphore = thSemaphore->semaphore; //Se achar, retorna o semaforo
         return SUCCESS;
