@@ -27,12 +27,18 @@ Existem dois casos:
 */
 int BlockCurrentThread()
 {
+
   TCB_t * currentThread = removeFirstThreadFromExecutionQueue();
   addThreadtoBlockingQueue(currentThread);
   getcontext(&currentThread->context);
-  if(currentThread == NULL){
-    return 0;
+  int * isReturningContext = malloc(sizeof(int));
+  *isReturningContext = 0 ;
+  if (*isReturningContext == 0 ) {
+    /* code */
+    executeNextThread();
   }
+  else
+    return 0;
   setcontext(&currentThread->context);
   return 1;
 
@@ -54,9 +60,14 @@ int UnblockThread(int tid)
   TCB_t * firstThread = removeThreadFromBlockingQueue(tid);
   addThreadtoReadyQueue(firstThread);
   getcontext(&firstThread->context);
-  if(firstThread == NULL){
-    return 0;
+  int * isReturningContext = malloc(sizeof(int));
+  *isReturningContext = 0 ;
+  if (*isReturningContext == 0 ) {
+    /* code */
+    executeNextThread();
   }
+  else
+    return 0;
   setcontext(&firstThread->context);
   return 1;
 }

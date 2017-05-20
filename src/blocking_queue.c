@@ -8,7 +8,7 @@
 PFILA2 threadsBlocked = NULL; //nao sei se é necessário fazer essa declaração
 CreateFila2(PFILA2 threadsBlocked);
 
-TCB_t * currentThreadOnExecution;
+TCB_t * currentThreadOnBlocking;
 
 // Funcao que adiciona thread na fila de bloqueados
 // Retorna 0 caso haja erro, 1 se der tudo certo.
@@ -29,19 +29,19 @@ Percorre a fila de threads bloqueadas, e caso seja a thread com a tid selecionad
 => 1 = Retirada com SUCESSO
    0 = Sem Retirada, pois não está na fila
 */
-int RemoveThreadFromBlockingQueue(int tid)
+TCB_t * RemoveThreadFromBlockingQueue(int tid)
 {
-  TCB_t * thread = currentThreadOnExecution;
+  TCB_t * thread = currentThreadOnBlocking;
 
   while(FirstFila2(threadsBlocked)!= 0)
   {
-    if((threadsBlocked->thread->tid)==tid){
+    if(GetAtIteratorFila2(threadsBlocked)->tid==tid){
+      thread = GetAtIteratorFila2(threadsBlocked);
       DeleteAtIteratorFila2(threadsBlocked);
-      return SUCESSO
+      return thread;
     }
     NextFila2(threadsBlocked);
   }
-  return FRACASSO;
 
   //currentThreadOnExecution = findreferencedThread(tid);
   //currentThreadOnExecution = NULL; //Remove a thread atual
