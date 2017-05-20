@@ -23,14 +23,29 @@ int AddThreadToBlockingQueue(TCB_t * thread)
     return FRACASSO;
 }
 
-
-TCB_t * RemoveThreadFromBlockingQueue(int tid)
+// Retorna um inteiro, dizendo se a thread foi retirada da fila de bloqueados
+/*
+Percorre a fila de threads bloqueadas, e caso seja a thread com a tid selecionada
+=> 1 = Retirada com SUCESSO
+   0 = Sem Retirada, pois não está na fila
+*/
+int RemoveThreadFromBlockingQueue(int tid)
 {
   TCB_t * thread = currentThreadOnExecution;
 
-  currentThreadOnExecution = findreferencedThread(tid);
-  currentThreadOnExecution = NULL; //Remove a thread atual
-  return thread; //Retorna a referencia da thread retirada
+  while(FirstFila2(threadsBlocked)!= 0)
+  {
+    if((threadsBlocked->thread->tid)==tid){
+      DeleteAtIteratorFila2(threadsBlocked);
+      return SUCESSO
+    }
+    NextFila2(threadsBlocked);
+  }
+  return FRACASSO;
+
+  //currentThreadOnExecution = findreferencedThread(tid);
+  //currentThreadOnExecution = NULL; //Remove a thread atual
+  //return thread; //Retorna a referencia da thread retirada
   /*
   if(thread->tid == tid){
     currentThreadOnExecution = NULL; //Remove a thread atual
