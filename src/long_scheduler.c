@@ -28,6 +28,6 @@ void createNewThread((void*) context, int prio){
   threadContext.stack.ss_sp = stack;
   threadContext.stack.ss_size = sizeof(stack);
   thread.context = threadContext;
-  addThreadToReadyQueue(thread);
+  addThreadToReadyQueue(newThread);
 }
 
