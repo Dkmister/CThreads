@@ -10,7 +10,7 @@
 # OBSERVAR que as variáveis de ambiente consideram que o Makefile está no diretótio "cthread"
 #
 
-CC=gcc
+CC=gcc -m32
 LIB_DIR=./lib
 INC_DIR=./include
 BIN_DIR=./bin
@@ -20,16 +20,7 @@ TEST_BIN_DIR=./testes/bin
 MOCKS_DIR=./testes/mocks
 MOCKS_BIN_DIR=./testes/mocks/bin
 
-all: regra1 regra2 regran
-
-regra1: #dependências para a regra1
-	$(CC) -o $(BIN_DIR)regra1 $(SRC_DIR)regra1.c -Wall
-
-regra2: #dependências para a regra2
-	$(CC) -o $(BIN_DIR)regra2 $(SRC_DIR)regra2.c -Wall
-
-regran: #dependências para a regran
-	$(CC) -o $(BIN_DIR)regran $(SRC_DIR)regran.c -Wall
+all: short_scheduler execution_queue semaphore
 
 short_scheduler:
 	$(CC) $(SRC_DIR)/short_scheduler.c -c -o $(BIN_DIR)/short_scheduler -Wall
@@ -37,11 +28,16 @@ short_scheduler:
 execution_queue:
 	$(CC) $(SRC_DIR)/execution_queue.c -c -o $(BIN_DIR)/execution_queue -Wall
 
+semaphore:
+	$(CC) $(SRC_DIR)/semaphore.c $(BIN_DIR)/support.o -o $(BIN_DIR)/semaphore -Wall
+
 #------------------------_TESTES_---------------------------
 
-my_test: ready_queue_mock short_scheduler execution_queue_mock thread_mock
-	$(CC) $(TEST_DIR)/my_test.c $(BIN_DIR)/short_scheduler $(MOCKS_BIN_DIR)/execution_queue $(MOCKS_BIN_DIR)/ready_queue $(MOCKS_BIN_DIR)/thread -o $(TEST_BIN_DIR)/my_test -Wall
+short_scheduler_test: ready_queue_mock short_scheduler execution_queue_mock thread_mock
+	$(CC) $(TEST_DIR)/short_scheduler_test.c $(BIN_DIR)/short_scheduler $(MOCKS_BIN_DIR)/execution_queue $(MOCKS_BIN_DIR)/ready_queue $(MOCKS_BIN_DIR)/thread -o $(TEST_BIN_DIR)/short_scheduler_test -Wall
 
+semaphore_test: short_scheduler thread_mock ready_queue_mock medium_scheduler_mock execution_queue_mock
+	$(CC) $(TEST_DIR)/semaphore_test.c $(BIN_DIR)/short_scheduler $(MOCKS_BIN_DIR)/execution_queue $(MOCKS_BIN_DIR)/ready_queue $(MOCKS_BIN_DIR)/medium_scheduler $(BIN_DIR)/support.o $(SRC_DIR)/semaphore.c $(MOCKS_BIN_DIR)/thread -o $(TEST_BIN_DIR)/semaphore_test -Wall
 
 #------------------------_MOCKS_-------------------------------
 
@@ -50,6 +46,9 @@ ready_queue_mock: thread_mock
 
 execution_queue_mock: thread_mock
 	$(CC) $(MOCKS_DIR)/execution_queue.c -c -o $(MOCKS_BIN_DIR)/execution_queue -Wall
+
+medium_scheduler_mock: thread_mock
+	$(CC) $(MOCKS_DIR)/medium_scheduler.c -c -o $(MOCKS_BIN_DIR)/medium_scheduler -Wall
 
 thread_mock:
 	$(CC) $(MOCKS_DIR)/thread.c -c -o $(MOCKS_BIN_DIR)/thread -Wall
