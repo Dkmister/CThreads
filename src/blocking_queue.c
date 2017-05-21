@@ -35,7 +35,8 @@ TCB_t * RemoveThreadFromBlockingQueue(int tid)
 
   while(FirstFila2(threadsBlocked)!= 0)
   {
-    if(GetAtIteratorFila2(threadsBlocked)->tid==tid){
+    if(GetAtIteratorFila2(threadsBlocked)->tid==tid)
+    {
       thread = GetAtIteratorFila2(threadsBlocked);
       DeleteAtIteratorFila2(threadsBlocked);
       return thread;

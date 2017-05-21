@@ -37,9 +37,8 @@ int BlockCurrentThread()
     /* code */
     executeNextThread();
   }
-  else
-    return 0;
-  return 1;
+  return 0;
+
 
 }
 /*
@@ -65,7 +64,6 @@ int UnblockThread(int tid)
     /* code */
     executeNextThread();
   }
-  else
-    return 0;
-  return 1;
+  return 0;
+
 }
