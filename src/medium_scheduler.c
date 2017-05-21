@@ -39,7 +39,6 @@ int BlockCurrentThread()
   }
   else
     return 0;
-  setcontext(&currentThread->context);
   return 1;
 
 }
@@ -68,6 +67,5 @@ int UnblockThread(int tid)
   }
   else
     return 0;
-  setcontext(&firstThread->context);
   return 1;
 }
