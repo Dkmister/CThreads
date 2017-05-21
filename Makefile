@@ -25,11 +25,18 @@ all: short_scheduler execution_queue semaphore
 short_scheduler:
 	$(CC) $(SRC_DIR)/short_scheduler.c -c -o $(BIN_DIR)/short_scheduler -Wall
 
+long_scheduler: ready_queue execution_queue
+	$(CC) $(SRC_DIR)/long_scheduler.c $(BIN_DIR)/ready_queue $(BIN_DIR)/execution_queue -c -o $(BIN_DIR)/long_scheduler -Wall
+
 execution_queue:
 	$(CC) $(SRC_DIR)/execution_queue.c -c -o $(BIN_DIR)/execution_queue -Wall
 
 semaphore:
-	$(CC) $(SRC_DIR)/semaphore.c $(BIN_DIR)/support.o -o $(BIN_DIR)/semaphore -Wall
+	$(CC) $(SRC_DIR)/semaphore.c $(BIN_DIR)/support.o -c -o $(BIN_DIR)/semaphore -Wall
+
+ready_queue:
+	$(CC) $(SRC_DIR)/ready_queue.c $(BIN_DIR)/support.o -c -o $(BIN_DIR)/ready_queue -Wall
+
 
 #------------------------_TESTES_---------------------------
 

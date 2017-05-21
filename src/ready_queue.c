@@ -64,7 +64,7 @@ se não conseguir retorna null;
 TCB_t * getNextThreadToExecute()
 {
 
-  PFILA2 = firstNotEmptyQueue;
+  PFILA2 firstNotEmptyQueue;
 
   if(FirstFila2(pFilap0) == SUCCESS){
     firstNotEmptyQueue = pFilap0;
@@ -75,7 +75,7 @@ TCB_t * getNextThreadToExecute()
   }else if(FirstFila2(pFilap3) == SUCCESS){
     firstNotEmptyQueue = pFilap3;
   }else{
-    return ERROR;
+    return NULL;
   }
 
   TCB_t * threadToLeave;
@@ -124,4 +124,6 @@ TCB_t * removeThreadFromReadyQueue(int tid)
       }
     }while(NextFila2(pFilap3) == 0);
   }
+
+  return NULL;
 }
