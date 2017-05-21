@@ -20,7 +20,11 @@ TEST_BIN_DIR=./testes/bin
 MOCKS_DIR=./testes/mocks
 MOCKS_BIN_DIR=./testes/mocks/bin
 
-all: short_scheduler execution_queue semaphore
+all:
+	ar crs libcthreads.a interface.o
+
+interface: short_scheduler execution_queue semaphore ready_queue medium_scheduler
+	$(CC) $(SRC_DIR)/interface.c $(BIN_DIR)/short_scheduler $(BIN_DIR)/execution_queue $(BIN_DIR)/semaphore $(BIN_DIR)/medium_scheduler $(BIN_DIR)/ready_queue -o $(BIN_DIR)/interface.o
 
 short_scheduler:
 	$(CC) $(SRC_DIR)/short_scheduler.c -c -o $(BIN_DIR)/short_scheduler -Wall
