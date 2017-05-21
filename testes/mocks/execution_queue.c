@@ -1,6 +1,5 @@
 #include "../../include/cdata.h"
 #include "./include/thread.h"
-#include <stdlib.h>
 
 TCB_t * removeThreadFromExecutionQueue(){
  return createMockThread();
@@ -8,4 +7,8 @@ TCB_t * removeThreadFromExecutionQueue(){
 
 int addThreadToExecutionQueue(TCB_t * thread){
   return 0;
+}
+
+TCB_t * getCurrentThread(){
+ return createMockThread();
 }

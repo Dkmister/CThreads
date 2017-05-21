@@ -3,6 +3,8 @@
 #include <stdlib.h>
 #include <stdio.h>
 
+int threadCounter = 0;
+
 void funcaoContext(){
   printf("Esta função é executada pelo thread mock da fila de aptos!");
   exit(1);
@@ -18,6 +20,7 @@ TCB_t * createMockThread(){
   context->uc_link = NULL;
   makecontext(context, funcaoContext, 0);
   thread->context = (*context);
-  thread->tid = 1;
+  thread->tid = threadCounter;
+  threadCounter++;
   return thread;
 }
