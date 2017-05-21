@@ -1,28 +1,23 @@
 #include "../include/cdata.h"
 #include "../include/cthread.h"
 #include "../include/support.h"
+#include "../include/ready_queue.h"
 #include <stdlib.h>
 
 
 
 //  sao criadas as filas aqui mesmo
 //  ou aqui só tem funções e as filas ficam sei la onde?
-  PFILA2 pFilap0;
-	PFILA2 pFilap1;
-	PFILA2 pFilap2;
-	PFILA2 pFilap3;
+  PFILA2 pFilap0 = NULL;
+	PFILA2 pFilap1 = NULL;
+	PFILA2 pFilap2 = NULL;
+	PFILA2 pFilap3 = NULL;
 
-	FILA2 Filap0;
-	FILA2 Filap1;
-	FILA2 Filap2;
-	FILA2 Filap3;
 
-	int a, b, c, d;
-
-	a = CreateFila2(pFilap0);
-	b = CreateFila2(pFilap1);
-	c = CreateFila2(pFilap2);
-  d = CreateFila2(pFilap3);
+	CreateFila2(pFilap0);
+	CreateFila2(pFilap1);
+	CreateFila2(pFilap2);
+  CreateFila2(pFilap3);
     
 
 
@@ -75,6 +70,14 @@ int addThreadToReadyQueue(TCB_t * thread)
   
   return 0;
 }
+
+
+
+
+
+
+
+
 
 /* 
 		TCB_t * getNextThreadToExecute():
