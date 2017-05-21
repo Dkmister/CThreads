@@ -27,7 +27,7 @@ void createNewThread((void*) context, int prio){
   char stack[256]
   threadContext.stack.ss_sp = stack;
   threadContext.stack.ss_size = sizeof(stack);
-  thread.context = threadContext;
+  newThread.context = threadContext;
   addThreadToReadyQueue(newThread);
 }
 
