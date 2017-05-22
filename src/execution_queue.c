@@ -1,6 +1,6 @@
 #include "../include/cdata.h"
+#include "../include/errors.h"
 #include <stdlib.h>
-
 
 TCB_t * currentThreadOnExecution;
 
@@ -20,11 +20,11 @@ TCB_t * removeThreadFromExecutionQueue(){
 */
 int addThreadToExecutionQueue(TCB_t * thread){
   if(currentThreadOnExecution != NULL){ //Se ja existe uma thread
-    return -1; //Retornar erro
+    return ERROR; //Retornar erro
   }
   currentThreadOnExecution = thread; //Seta a nova thread
   currentThreadOnExecution->state = 2; //EXECUÇÂO
-  return 0; //Retornar sucesso
+  return SUCCESS; //Retornar sucesso
 }
 
 TCB_t * getCurrentThread(){

@@ -2,4 +2,4 @@
 
 TCB_t * getNextThreadToExecute();
 TCB_t * removeThreadFromReadyQueue(int tid);
-int * addThreadToReadyQueue(TCB_t * thread);
+int addThreadToReadyQueue(TCB_t * thread);
