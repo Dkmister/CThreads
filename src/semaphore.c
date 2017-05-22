@@ -7,7 +7,6 @@
 #include <stdlib.h>
 
 PFILA2 threadSemaphores = NULL;
-CreateFila2(threadSemaphores); //inicializa a fila
 
 typedef struct ThreadSemaphore {
   int threadTid;
@@ -15,6 +14,10 @@ typedef struct ThreadSemaphore {
 } ThreadSemaphore;
 
 int searchThreadSemaphore(int tid, csem_t * semaphore){
+  if(threadSemaphores == NULL){
+    threadSemaphores = malloc(sizeof(FILA2));
+    CreateFila2(threadSemaphores);
+  }
   if(FirstFila2(threadSemaphores) == ERROR){
     return ERROR; //Se a fila não estiver vazia
   }
@@ -30,11 +33,11 @@ int searchThreadSemaphore(int tid, csem_t * semaphore){
 }
 
 int newSemaphore(csem_t * semaphore, int maxThreadsOnResource){
+  semaphore->count = maxThreadsOnResource; //inicializa o contador do semáforo
   PFILA2 fila = malloc(sizeof(FILA2));
   if(CreateFila2(fila) == ERROR){ //inicializa uma fila
     return ERROR;
   }
-  semaphore->count = maxThreadsOnResource; //inicializa o contador do semáforo
   semaphore->fila = fila;
   return SUCCESS;
 }
@@ -44,9 +47,10 @@ int waitOnSemaphore(csem_t * semaphore){
     semaphore->count = semaphore->count - 1; //Decrementa o contador do semáforo
   } else { //Se o semáforo ja estiver ocupado (recurso não pode mais ser alocado)
     TCB_t * currentThread = getCurrentThread(); //pega a thread atualmente em execução
-    if(AppendFila2(semaphore->fila, (void*)currentThread) == ERROR){ //Coloca a thread na fila de espera do semáforo
+    if(AppendFila2(semaphore->fila, currentThread) == ERROR){ //Coloca a thread na fila de espera do semáforo
       return ERROR;
     }
+    printf("Bloqueando");
     BlockCurrentThread(); //Bloqueia a thread atual e executa a próxima
   }
   return SUCCESS;
@@ -55,7 +59,8 @@ int waitOnSemaphore(csem_t * semaphore){
 int waitOnThread(int tid){
   csem_t * semaphore;
   if(searchThreadSemaphore(tid, semaphore) == ERROR){ //Procura a estrutura de semáforo referente à thread referenciada por tid;
-    newSemaphore(semaphore, 1); //Se não achar nenhuma fila de espera na thread, cria um novo semáforo e nova instancia de fila de espera
+    semaphore = malloc(sizeof(csem_t));
+    newSemaphore(semaphore, 0); //Se não achar nenhuma fila de espera na thread, cria um novo semáforo e nova instancia de fila de espera
     ThreadSemaphore * thSemaphore = malloc(sizeof(ThreadSemaphore));
     thSemaphore->semaphore = semaphore;
     thSemaphore->threadTid = tid;

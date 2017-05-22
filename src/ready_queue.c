@@ -22,18 +22,34 @@ int addThreadToReadyQueue(TCB_t * thread)
   {
     // caso prioridade é 0
     case 0:
+      if(pFilap0 == NULL){
+         pFilap0 = malloc(sizeof(FILA2));
+         CreateFila2(pFilap0);
+      }
       correctQueue = pFilap0;
       break;
     // caso prioridade é 1
     case 1:
+      if(pFilap1 == NULL){
+         pFilap0 = malloc(sizeof(FILA2));
+         CreateFila2(pFilap0);
+      }
       correctQueue = pFilap1;
       break;
     // caso prioridade é 2
     case 2:
+      if(pFilap2 == NULL){
+         pFilap0 = malloc(sizeof(FILA2));
+         CreateFila2(pFilap0);
+      }
       correctQueue = pFilap2;
       break;
     // caso prioridade é 3
     case 3:
+      if(pFilap3 == NULL){
+         pFilap0 = malloc(sizeof(FILA2));
+         CreateFila2(pFilap0);
+      }
       correctQueue = pFilap3;
       break;
     default:
@@ -41,10 +57,6 @@ int addThreadToReadyQueue(TCB_t * thread)
       break;
   }
 
-  if(correctQueue == NULL){
-    correctQueue = malloc(sizeof(FILA2));
-    CreateFila2(correctQueue);
-  }
 
   if(AppendFila2(correctQueue, thread) == ERROR){
     return ERROR;
@@ -64,15 +76,16 @@ TCB_t * getNextThreadToExecute()
 
   PFILA2 firstNotEmptyQueue;
 
-  if(FirstFila2(pFilap0) == SUCCESS){
+  if(pFilap0 != NULL && FirstFila2(pFilap0) != ERROR){
     firstNotEmptyQueue = pFilap0;
-  }else if(FirstFila2(pFilap1) == SUCCESS){
+  }else if(pFilap1 != NULL && FirstFila2(pFilap1) != ERROR){
     firstNotEmptyQueue = pFilap1;
-  }else if(FirstFila2(pFilap2) == SUCCESS){
+  }else if(pFilap2 != NULL && FirstFila2(pFilap2) != ERROR){
     firstNotEmptyQueue = pFilap2;
-  }else if(FirstFila2(pFilap3) == SUCCESS){
+  }else if(pFilap3 != NULL && FirstFila2(pFilap3) != ERROR){
     firstNotEmptyQueue = pFilap3;
   }else{
+    printf("returnei null");
     return NULL;
   }
 

@@ -30,27 +30,23 @@ void endThread(){
   executeNextThread();
 }
 
-ucontext_t newContext(void * context){
-  ucontext_t thisNewContext;
-  getcontext(&thisNewContext);
-  char stack[256];
-  thisNewContext.uc_stack.ss_sp = stack;
-  thisNewContext.uc_stack.ss_size = sizeof(stack);
-  thisNewContext.uc_link = NULL;
-  makecontext(&thisNewContext, context, 0);
-  return thisNewContext;
-}
-
-ucontext_t endContext(){
-}
-
-int createNewThread(void * context, int prio){
+int createNewThread(void* (*context)(void*), int prio){
   if(firstThread == 0){
     createMainThread();
+    firstThread = 1;
   }
   TCB_t * newThread = malloc(sizeof(TCB_t));
+  
+  ucontext_t * thisNewContext = malloc(sizeof(ucontext_t));
+  getcontext(thisNewContext);
+  char stack[8192];
+  thisNewContext->uc_stack.ss_sp = stack;
+  thisNewContext->uc_stack.ss_size = sizeof(stack);
+  thisNewContext->uc_link = NULL;
+  makecontext(thisNewContext, context, 0);
+  newThread->context = (*thisNewContext);
+
   newThread->tid = newTid();
-  newThread->context = newContext(context);
   addThreadToReadyQueue(newThread);
   return newThread->tid;
 }
@@ -58,11 +54,14 @@ int createNewThread(void * context, int prio){
 void createMainThread(){
   TCB_t * mainThread = malloc(sizeof(TCB_t));
   mainThread->tid = newTid();
-  ucontext_t mainContext;
-  getcontext(&mainContext);
-  char stack[256];
-  mainContext.uc_stack.ss_sp = stack;
-  mainContext.uc_stack.ss_size = sizeof(stack);
-  mainContext.uc_link = NULL;
+  mainThread->ticket = 0;
+  ucontext_t * mainContext;
+  mainContext = malloc(sizeof(ucontext_t));
+  getcontext(mainContext);
+  char stack[8192];
+  mainContext->uc_stack.ss_sp = stack;
+  mainContext->uc_stack.ss_size = sizeof(stack);
+  mainContext->uc_link = NULL;
+  mainThread->context = *(mainContext);
   addThreadToExecutionQueue(mainThread);
 }
