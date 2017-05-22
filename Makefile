@@ -37,6 +37,11 @@ semaphore:
 ready_queue:
 	$(CC) $(SRC_DIR)/ready_queue.c $(BIN_DIR)/support.o -c -o $(BIN_DIR)/ready_queue -Wall
 
+medium_scheduler:
+	$(CC) $(SRC_DIR)/medium_scheduler.c $(BIN_DIR)/support.o -c -o $(BIN_DIR)/medium_scheduler -Wall
+
+blocking_queue:
+	$(CC) $(SRC_DIR)/blocking_queue.c $(BIN_DIR)/support.o -c -o $(BIN_DIR)/blocking_queue -Wall
 
 #------------------------_TESTES_---------------------------
 
