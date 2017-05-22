@@ -11,6 +11,9 @@ int executeNextThread(){
   TCB_t * nextThread = getNextThreadToExecute(); //Pede a próxima thread a ser executada para a fila de aptos
   removeThreadFromReadyQueue(nextThread->tid); //Remove a próxima thread da fila de aptos
   addThreadToExecutionQueue(nextThread); //Adiciona a nova thread na fila de execução
+
+  printf("\nexecutando : %d\n", nextThread->tid);
+
   int * isReturningFromExecution = malloc(sizeof(int));
   *isReturningFromExecution = 0;
 

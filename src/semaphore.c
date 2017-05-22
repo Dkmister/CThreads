@@ -23,12 +23,12 @@ int searchThreadSemaphore(int tid, csem_t * semaphore){
   }
   ThreadSemaphore * thSemaphore;
   do{ //Itera na fila até achar o semáforo
-    thSemaphore = GetAtIteratorFila2(thSemaphore->semaphore->fila);
-    if(thSemaphore->threadTid == tid){ //Se achou a estrutura da thread
+    thSemaphore = GetAtIteratorFila2(threadSemaphores);
+    if(thSemaphore!=NULL && thSemaphore->threadTid == tid){ //Se achou a estrutura da thread
       semaphore = thSemaphore->semaphore; //Se achar, retorna o semaforo
       return SUCCESS;
     }
-  }while(NextFila2(threadSemaphores) != ERROR);
+  }while(NextFila2(threadSemaphores) == 0);
   return ERROR; //Se não achou nada, retorna null
 }
 
@@ -50,7 +50,6 @@ int waitOnSemaphore(csem_t * semaphore){
     if(AppendFila2(semaphore->fila, currentThread) == ERROR){ //Coloca a thread na fila de espera do semáforo
       return ERROR;
     }
-    printf("Bloqueando");
     BlockCurrentThread(); //Bloqueia a thread atual e executa a próxima
   }
   return SUCCESS;
@@ -77,6 +76,7 @@ int releaseSemaphore(csem_t * semaphore){
   if(LastFila2(semaphore->fila) != ERROR){ //Caso tenha alguma thread esperando
     TCB_t * waitingThread = (TCB_t *)GetAtIteratorFila2(semaphore->fila);
     semaphore->count = semaphore->count - 1;
+    printf("liberando %d\n" , waitingThread->tid);
     UnblockThread(waitingThread->tid);
     DeleteAtIteratorFila2(semaphore->fila);
   }

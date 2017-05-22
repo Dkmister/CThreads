@@ -31,24 +31,24 @@ int addThreadToReadyQueue(TCB_t * thread)
     // caso prioridade é 1
     case 1:
       if(pFilap1 == NULL){
-         pFilap0 = malloc(sizeof(FILA2));
-         CreateFila2(pFilap0);
+         pFilap1 = malloc(sizeof(FILA2));
+         CreateFila2(pFilap1);
       }
       correctQueue = pFilap1;
       break;
     // caso prioridade é 2
     case 2:
       if(pFilap2 == NULL){
-         pFilap0 = malloc(sizeof(FILA2));
-         CreateFila2(pFilap0);
+         pFilap2 = malloc(sizeof(FILA2));
+         CreateFila2(pFilap2);
       }
       correctQueue = pFilap2;
       break;
     // caso prioridade é 3
     case 3:
       if(pFilap3 == NULL){
-         pFilap0 = malloc(sizeof(FILA2));
-         CreateFila2(pFilap0);
+         pFilap3 = malloc(sizeof(FILA2));
+         CreateFila2(pFilap3);
       }
       correctQueue = pFilap3;
       break;
@@ -76,13 +76,17 @@ TCB_t * getNextThreadToExecute()
 
   PFILA2 firstNotEmptyQueue;
 
-  if(pFilap0 != NULL && FirstFila2(pFilap0) != ERROR){
+  if(pFilap0 != NULL && FirstFila2(pFilap0) == 0){
+    printf("\nfila 0\n");
     firstNotEmptyQueue = pFilap0;
-  }else if(pFilap1 != NULL && FirstFila2(pFilap1) != ERROR){
+  }else if(pFilap1 != NULL && FirstFila2(pFilap1) == 0){
+    printf("\nfila 1\n");
     firstNotEmptyQueue = pFilap1;
-  }else if(pFilap2 != NULL && FirstFila2(pFilap2) != ERROR){
+  }else if(pFilap2 != NULL && FirstFila2(pFilap2) == 0){
+    printf("\nfila 2\n");
     firstNotEmptyQueue = pFilap2;
-  }else if(pFilap3 != NULL && FirstFila2(pFilap3) != ERROR){
+  }else if(pFilap3 != NULL && FirstFila2(pFilap3) == 0){
+    printf("\nfila 3\n");
     firstNotEmptyQueue = pFilap3;
   }else{
     printf("returnei null");
@@ -91,6 +95,7 @@ TCB_t * getNextThreadToExecute()
 
   TCB_t * threadToLeave;
   threadToLeave = GetAtIteratorFila2(firstNotEmptyQueue);
+  printf("\npróxima : %d\n", threadToLeave->tid);
   DeleteAtIteratorFila2(firstNotEmptyQueue);
   return threadToLeave;
 }
@@ -101,7 +106,7 @@ TCB_t * removeThreadFromReadyQueue(int tid)
 
   TCB_t * ThreadToRemove;
 
-  if(FirstFila2(pFilap0) == SUCCESS){
+  if(pFilap0 != NULL && FirstFila2(pFilap0) == SUCCESS){
     do{
       ThreadToRemove = GetAtIteratorFila2(pFilap0);
       if(ThreadToRemove->tid == tid){
@@ -109,7 +114,7 @@ TCB_t * removeThreadFromReadyQueue(int tid)
         return ThreadToRemove;
       }
     }while(NextFila2(pFilap0) == SUCCESS);
-  } else if(FirstFila2(pFilap1) == SUCCESS){
+  } else if(pFilap1 != NULL && FirstFila2(pFilap1) == SUCCESS){
     do{
       ThreadToRemove = GetAtIteratorFila2(pFilap1);
       if(ThreadToRemove->tid == tid){
@@ -117,7 +122,7 @@ TCB_t * removeThreadFromReadyQueue(int tid)
         return ThreadToRemove;
       }
     }while(NextFila2(pFilap1) == SUCCESS);
-  } else if(FirstFila2(pFilap2) == SUCCESS){
+  } else if(pFilap2 != NULL && FirstFila2(pFilap2) == SUCCESS){
     do{
       ThreadToRemove = GetAtIteratorFila2(pFilap2);
       if(ThreadToRemove->tid == tid)
@@ -126,7 +131,7 @@ TCB_t * removeThreadFromReadyQueue(int tid)
         return ThreadToRemove;
       }
     }while(NextFila2(pFilap2) == SUCCESS);
-  } else if(FirstFila2(pFilap3) == SUCCESS){
+  } else if(pFilap3 != NULL && FirstFila2(pFilap3) == SUCCESS){
     do{
       ThreadToRemove = GetAtIteratorFila2(pFilap3);
       if(ThreadToRemove->tid == tid){
