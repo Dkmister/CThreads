@@ -20,32 +20,32 @@ TEST_BIN_DIR=./testes/bin
 MOCKS_DIR=./testes/mocks
 MOCKS_BIN_DIR=./testes/mocks/bin
 
-all: interface
-	ar crs $(BIN_DIR)/libcthreads.a $(BIN_DIR)/interface.o
+all: interface short_scheduler execution_queue semaphore ready_queue medium_scheduler blocking_queue long_scheduler
+	ar crs $(BIN_DIR)/libcthreads.a $(BIN_DIR)/interface.o $(BIN_DIR)/short_scheduler $(BIN_DIR)/execution_queue $(BIN_DIR)/semaphore $(BIN_DIR)/medium_scheduler $(BIN_DIR)/ready_queue $(BIN_DIR)/long_scheduler $(BIN_DIR)/blocking_queue $(BIN_DIR)/support.o
 
-interface: short_scheduler execution_queue semaphore ready_queue medium_scheduler blocking_queue long_scheduler
-	$(CC) $(SRC_DIR)/interface.c $(BIN_DIR)/short_scheduler $(BIN_DIR)/execution_queue $(BIN_DIR)/semaphore $(BIN_DIR)/medium_scheduler $(BIN_DIR)/ready_queue -c -o $(BIN_DIR)/interface.o
+interface:
+	$(CC) $(SRC_DIR)/interface.c  -c -o $(BIN_DIR)/interface.o
 
 short_scheduler:
 	$(CC) $(SRC_DIR)/short_scheduler.c -c -o $(BIN_DIR)/short_scheduler -Wall
 
-long_scheduler: ready_queue execution_queue
-	$(CC) $(SRC_DIR)/long_scheduler.c $(BIN_DIR)/ready_queue $(BIN_DIR)/execution_queue -c -o $(BIN_DIR)/long_scheduler -Wall
+long_scheduler:
+	$(CC) $(SRC_DIR)/long_scheduler.c  -c -o $(BIN_DIR)/long_scheduler -Wall
 
 execution_queue:
 	$(CC) $(SRC_DIR)/execution_queue.c -c -o $(BIN_DIR)/execution_queue -Wall
 
 semaphore:
-	$(CC) $(SRC_DIR)/semaphore.c $(BIN_DIR)/support.o -c -o $(BIN_DIR)/semaphore -Wall
+	$(CC) $(SRC_DIR)/semaphore.c -c -o $(BIN_DIR)/semaphore -Wall
 
 ready_queue:
-	$(CC) $(SRC_DIR)/ready_queue.c $(BIN_DIR)/support.o -c -o $(BIN_DIR)/ready_queue -Wall
+	$(CC) $(SRC_DIR)/ready_queue.c -c -o $(BIN_DIR)/ready_queue -Wall
 
 medium_scheduler:
-	$(CC) $(SRC_DIR)/medium_scheduler.c $(BIN_DIR)/support.o -c -o $(BIN_DIR)/medium_scheduler -Wall
+	$(CC) $(SRC_DIR)/medium_scheduler.c  -c -o $(BIN_DIR)/medium_scheduler -Wall
 
 blocking_queue:
-	$(CC) $(SRC_DIR)/blocking_queue.c $(BIN_DIR)/support.o -c -o $(BIN_DIR)/blocking_queue -Wall
+	$(CC) $(SRC_DIR)/blocking_queue.c  -c -o $(BIN_DIR)/blocking_queue -Wall
 
 #------------------------_TESTES_---------------------------
 
@@ -54,6 +54,9 @@ short_scheduler_test: ready_queue_mock short_scheduler execution_queue_mock thre
 
 semaphore_test: short_scheduler thread_mock ready_queue_mock medium_scheduler_mock execution_queue_mock
 	$(CC) $(TEST_DIR)/semaphore_test.c $(BIN_DIR)/short_scheduler $(MOCKS_BIN_DIR)/execution_queue $(MOCKS_BIN_DIR)/ready_queue $(MOCKS_BIN_DIR)/medium_scheduler $(BIN_DIR)/support.o $(SRC_DIR)/semaphore.c $(MOCKS_BIN_DIR)/thread -o $(TEST_BIN_DIR)/semaphore_test -Wall
+
+full_test:
+	$(CC) $(TEST_DIR)/full_test.c $(BIN_DIR)/libcthreads.a -o $(TEST_DIR)/full
 
 #------------------------_MOCKS_-------------------------------
 

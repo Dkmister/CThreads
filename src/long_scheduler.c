@@ -31,12 +31,15 @@ void endThread(){
 ucontext_t newContext(void * context){
   ucontext_t thisNewContext;
   getcontext(&thisNewContext);
-  makecontext(&thisNewContext, context, 0);
   char stack[256];
   thisNewContext.uc_stack.ss_sp = stack;
   thisNewContext.uc_stack.ss_size = sizeof(stack);
-  thisNewContext.uc_link = (void*)endThread;
+  thisNewContext.uc_link = NULL;
+  makecontext(&thisNewContext, context, 0);
   return thisNewContext;
+}
+
+ucontext_t endContext(){
 }
 
 int createNewThread(void * context, int prio){
