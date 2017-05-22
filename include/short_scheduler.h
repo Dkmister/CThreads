@@ -1,3 +1,3 @@
 #include "cdata.h"
 
-void executeNextThread();
+int executeNextThread();

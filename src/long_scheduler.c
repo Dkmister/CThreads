@@ -39,9 +39,10 @@ ucontext_t newContext(void * context){
   return thisNewContext;
 }
 
-void createNewThread( void * context, int prio){
+int createNewThread(void * context, int prio){
   TCB_t * newThread = malloc(sizeof(TCB_t));
   newThread->tid = newTid();
   newThread->context = newContext(context);
   addThreadToReadyQueue(newThread);
+  return newThread->tid;
 }
