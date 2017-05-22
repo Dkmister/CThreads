@@ -1,6 +1,9 @@
-// Localizar em  Cthreads/src/
-
 #include "../include/cdata.h"
+#include "../include/errors.h"
+#include "../include/short_scheduler.h"
+#include "../include/ready_queue.h"
+#include "../include/blocking_queue.h"
+#include "../include/execution_queue.h"
 #include <ucontext.h>
 #include <stdlib.h>
 #include <stddef.h>
@@ -28,18 +31,15 @@ Existem dois casos:
 int BlockCurrentThread()
 {
 
-  TCB_t * currentThread = removeFirstThreadFromExecutionQueue();
-  addThreadtoBlockingQueue(currentThread);
-  getcontext(&currentThread->context);
+  TCB_t * currentThread = removeThreadFromExecutionQueue();
+  AddThreadToBlockingQueue(currentThread);
   int * isReturningContext = malloc(sizeof(int));
   *isReturningContext = 0 ;
+  getcontext(&currentThread->context);
   if (*isReturningContext == 0 ) {
-    /* code */
     executeNextThread();
   }
-  return 0;
-
-
+  return SUCCESS;
 }
 /*
 void UnblockThread(int tid):
@@ -55,15 +55,10 @@ Existem dois casos:
 
 int UnblockThread(int tid)
 {
-  TCB_t * firstThread = removeThreadFromBlockingQueue(tid);
-  addThreadtoReadyQueue(firstThread);
-  getcontext(&firstThread->context);
-  int * isReturningContext = malloc(sizeof(int));
-  *isReturningContext = 0 ;
-  if (*isReturningContext == 0 ) {
-    /* code */
-    executeNextThread();
+  TCB_t * unblockedThread = RemoveThreadFromBlockingQueue(tid);
+  if(unblockedThread == NULL){
+    return ERROR;
   }
-  return 0;
-
+  addThreadToReadyQueue(unblockedThread);
+  return SUCCESS;
 }
