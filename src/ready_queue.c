@@ -5,19 +5,11 @@
 #include <stdlib.h>
 
 
-
-//  sao criadas as filas aqui mesmo
-//  ou aqui só tem funções e as filas ficam sei la onde?
 PFILA2 pFilap0 = NULL;
 PFILA2 pFilap1 = NULL;
 PFILA2 pFilap2 = NULL;
 PFILA2 pFilap3 = NULL;
 
-
-CreateFila2(pFilap0);
-CreateFila2(pFilap1);
-CreateFila2(pFilap2);
-CreateFila2(pFilap3);
 
 /* retorna -1 se der erro
 retorn 0 se conseguir
@@ -30,22 +22,28 @@ int addThreadToReadyQueue(TCB_t * thread)
   {
     // caso prioridade é 0
     case 0:
-    correctQueue = pFilap0;
-    break;
+      correctQueue = pFilap0;
+      break;
     // caso prioridade é 1
     case 1:
-    correctQueue = pFilap1;
-    break;
+      correctQueue = pFilap1;
+      break;
     // caso prioridade é 2
     case 2:
-    correctQueue = pFilap2;
-    break;
+      correctQueue = pFilap2;
+      break;
     // caso prioridade é 3
     case 3:
-    correctQueue = pFilap3;
-    break;
+      correctQueue = pFilap3;
+      break;
     default:
-    return ERROR;
+      return ERROR;
+      break;
+  }
+
+  if(correctQueue == NULL){
+    correctQueue = malloc(sizeof(FILA2));
+    CreateFila2(correctQueue);
   }
 
   if(AppendFila2(correctQueue, thread) == ERROR){

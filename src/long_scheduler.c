@@ -12,6 +12,8 @@
 
 */
 
+int firstThread = 0;
+
 int Tid = 0;
 
 int newTid()
@@ -43,9 +45,24 @@ ucontext_t endContext(){
 }
 
 int createNewThread(void * context, int prio){
+  if(firstThread == 0){
+    createMainThread();
+  }
   TCB_t * newThread = malloc(sizeof(TCB_t));
   newThread->tid = newTid();
   newThread->context = newContext(context);
   addThreadToReadyQueue(newThread);
   return newThread->tid;
+}
+
+void createMainThread(){
+  TCB_t * mainThread = malloc(sizeof(TCB_t));
+  mainThread->tid = newTid();
+  ucontext_t mainContext;
+  getcontext(&mainContext);
+  char stack[256];
+  mainContext.uc_stack.ss_sp = stack;
+  mainContext.uc_stack.ss_size = sizeof(stack);
+  mainContext.uc_link = NULL;
+  addThreadToExecutionQueue(mainThread);
 }
