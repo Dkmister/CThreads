@@ -4,6 +4,6 @@
 #include <ucontext.h>
 #include <stdlib.h>
 
-int createNewThread(void * context, int prio);
+int createNewThread(void * context, int prio, void * arg);
 void initLongScheduler();
 int finishedThread(int tid);

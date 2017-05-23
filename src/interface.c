@@ -24,11 +24,11 @@ void initialize(){
   initializeSemaphores();
 }
 
-int ccreate (void* (*start)(void*), void *arg, int prio){
+int ccreate (void* (*start)(void*), void *arg, int prio, void * arg){
   if(initialized == 0){
     initialize();
   }
-  return createNewThread(start, prio);
+  return createNewThread(start, prio, arg);
 }
 
 int csetprio(int tid, int prio){

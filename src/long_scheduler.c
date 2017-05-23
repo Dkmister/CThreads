@@ -73,13 +73,13 @@ int finishedThread(int tid){
   return ERROR;
 }
 
-int createNewThread(void* (*context)(void*), int prio){
+int createNewThread(void* (*context)(void*), int prio, void * arg){
   ucontext_t * thisNewContext = malloc(sizeof(ucontext_t));
   getcontext(thisNewContext);
   thisNewContext->uc_link = threadEndContext;
   thisNewContext->uc_stack.ss_sp = (char*)malloc(SIGSTKSZ);
   thisNewContext->uc_stack.ss_size = SIGSTKSZ;
-  makecontext(thisNewContext, (void*)context, 0);
+  makecontext(thisNewContext, (void*)context, 1, arg);
 
   TCB_t * newThread = malloc(sizeof(TCB_t));
   newThread->context = (*thisNewContext);
