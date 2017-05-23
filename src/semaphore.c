@@ -76,7 +76,6 @@ int releaseSemaphore(csem_t * semaphore){
   if(LastFila2(semaphore->fila) != ERROR){ //Caso tenha alguma thread esperando
     TCB_t * waitingThread = (TCB_t *)GetAtIteratorFila2(semaphore->fila);
     semaphore->count = semaphore->count - 1;
-    printf("liberando %d\n" , waitingThread->tid);
     UnblockThread(waitingThread->tid);
     DeleteAtIteratorFila2(semaphore->fila);
   }

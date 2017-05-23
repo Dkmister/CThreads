@@ -5,3 +5,4 @@
 #include <stdlib.h>
 
 int createNewThread(void * context, int prio);
+void initLongScheduler();

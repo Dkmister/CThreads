@@ -2,19 +2,19 @@
 #include <stdio.h>
 
 void funct1(){
-  printf("função 1 chamada!");
+  printf("\nfunção 1 chamada!\n");
 }
 
 void funct2(){
-  printf("função 2 chamada!");
+  printf("\nfunção 2 chamada!\n");
 }
 
 void funct3(){
-  printf("função 3 chamada!");
+  printf("\nfunção 3 chamada!\n");
 }
 
 int main(){
-  printf("Começando");
+  printf("\nComeçando\n");
 
   int t1 = ccreate((void*)&funct1, NULL, 0);
   int t2 = ccreate((void*)&funct2, NULL, 3);

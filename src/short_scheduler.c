@@ -12,8 +12,6 @@ int executeNextThread(){
   removeThreadFromReadyQueue(nextThread->tid); //Remove a próxima thread da fila de aptos
   addThreadToExecutionQueue(nextThread); //Adiciona a nova thread na fila de execução
 
-  printf("\nexecutando : %d\n", nextThread->tid);
-
   int * isReturningFromExecution = malloc(sizeof(int));
   *isReturningFromExecution = 0;
 

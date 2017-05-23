@@ -14,11 +14,26 @@
 #include "../include/medium_scheduler.h"
 #include "../include/long_scheduler.h"
 
+int initialized = 0;
+
+void initialize(){
+  initialized = 1;
+  initReadyQueue();
+  initBlockingQueue();
+  initLongScheduler();
+}
+
 int ccreate (void* (*start)(void*), void *arg, int prio){
+  if(initialized == 0){
+    initialize();
+  }
   return createNewThread(start, prio);
 }
 
 int csetprio(int tid, int prio){
+  if(initialized == 0){
+    initialize();
+  }
   TCB_t * thread = removeThreadFromReadyQueue(tid); //Tenta encontrar a thread na fila de aptos;
   if(thread != NULL){ //Se achou a thread
     thread->ticket = prio; //Altera a prioridade
@@ -42,22 +57,37 @@ int csetprio(int tid, int prio){
 }
 
 int cyield(void){
+  if(initialized == 0){
+    initialize();
+  }
   return executeNextThread();
 }
 
 int cjoin(int tid){
+  if(initialized == 0){
+    initialize();
+  }
   return waitOnThread(tid);
 }
 
 int csem_init(csem_t *sem, int count){
+  if(initialized == 0){
+    initialize();
+  }
   return newSemaphore(sem, count);
 }
 
 int cwait(csem_t *sem){
+  if(initialized == 0){
+    initialize();
+  }
   return waitOnSemaphore(sem);
 }
 
 int csignal(csem_t *sem){
+  if(initialized == 0){
+    initialize();
+  }
   return releaseSemaphore(sem);
 }
 
