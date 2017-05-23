@@ -36,9 +36,11 @@ int BlockCurrentThread()
   int * isReturningContext = malloc(sizeof(int));
   *isReturningContext = 0 ;
   getcontext(&currentThread->context);
-  if (*isReturningContext == 0 ) {
+  if(*isReturningContext == 0 ) {
+    *isReturningContext = 1;
     executeNextThread();
   }
+  free(isReturningContext);
   return SUCCESS;
 }
 /*

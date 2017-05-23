@@ -7,8 +7,11 @@
 
 
 int executeNextThread(){
-  TCB_t * oldExecutingThread = removeThreadFromExecutionQueue(); //Remove a thread atual da fila de execução
   TCB_t * nextThread = getNextThreadToExecute(); //Pede a próxima thread a ser executada para a fila de aptos
+  if(nextThread == NULL){
+    return ERROR;
+  }
+  TCB_t * oldExecutingThread = removeThreadFromExecutionQueue(); //Remove a thread atual da fila de execução
   removeThreadFromReadyQueue(nextThread->tid); //Remove a próxima thread da fila de aptos
   addThreadToExecutionQueue(nextThread); //Adiciona a nova thread na fila de execução
 
@@ -24,5 +27,6 @@ int executeNextThread(){
     *isReturningFromExecution = 1; //Seta a flag para que, na próxima vez, saibamos que estamos voltando do contexto
     setcontext(&(nextThread->context)); //Executa o contexto da próxima thread
   }
+  free(isReturningFromExecution);
   return SUCCESS;
 }

@@ -3,33 +3,34 @@
 #include "../include/execution_queue.h"
 #include "../include/short_scheduler.h"
 #include "../include/medium_scheduler.h"
+#include "../include/long_scheduler.h"
 #include "../include/errors.h"
 #include <stdlib.h>
 
 PFILA2 threadSemaphores = NULL;
+
+void initializeSemaphores(){
+  threadSemaphores = malloc(sizeof(FILA2));
+  CreateFila2(threadSemaphores);
+}
 
 typedef struct ThreadSemaphore {
   int threadTid;
   csem_t * semaphore;
 } ThreadSemaphore;
 
-int searchThreadSemaphore(int tid, csem_t * semaphore){
-  if(threadSemaphores == NULL){
-    threadSemaphores = malloc(sizeof(FILA2));
-    CreateFila2(threadSemaphores);
-  }
+csem_t * searchThreadSemaphore(int tid){
   if(FirstFila2(threadSemaphores) == ERROR){
-    return ERROR; //Se a fila não estiver vazia
+    return NULL; //Se a fila não estiver vazia
   }
-  ThreadSemaphore * thSemaphore;
   do{ //Itera na fila até achar o semáforo
+    ThreadSemaphore * thSemaphore;
     thSemaphore = GetAtIteratorFila2(threadSemaphores);
     if(thSemaphore!=NULL && thSemaphore->threadTid == tid){ //Se achou a estrutura da thread
-      semaphore = thSemaphore->semaphore; //Se achar, retorna o semaforo
-      return SUCCESS;
+      return thSemaphore->semaphore; //Se achar, retorna o semaforo
     }
   }while(NextFila2(threadSemaphores) == 0);
-  return ERROR; //Se não achou nada, retorna null
+  return NULL; //Se não achou nada, retorna null
 }
 
 int newSemaphore(csem_t * semaphore, int maxThreadsOnResource){
@@ -56,8 +57,9 @@ int waitOnSemaphore(csem_t * semaphore){
 }
 
 int waitOnThread(int tid){
-  csem_t * semaphore;
-  if(searchThreadSemaphore(tid, semaphore) == ERROR){ //Procura a estrutura de semáforo referente à thread referenciada por tid;
+  int threadHasFinished = finishedThread(tid);
+  csem_t * semaphore = searchThreadSemaphore(tid);
+  if(semaphore == NULL &&  threadHasFinished != SUCCESS){ //Procura a estrutura de semáforo referente à thread referenciada por tid;
     semaphore = malloc(sizeof(csem_t));
     newSemaphore(semaphore, 0); //Se não achar nenhuma fila de espera na thread, cria um novo semáforo e nova instancia de fila de espera
     ThreadSemaphore * thSemaphore = malloc(sizeof(ThreadSemaphore));
@@ -66,9 +68,11 @@ int waitOnThread(int tid){
     if(AppendFila2(threadSemaphores, thSemaphore) == ERROR){
       return ERROR;
     }
+    waitOnSemaphore(semaphore);
+    return SUCCESS; //Retorna sucesso
+  } else {
+    return ERROR;
   }
-  waitOnSemaphore(semaphore);
-  return SUCCESS; //Retorna sucesso
 }
 
 int releaseSemaphore(csem_t * semaphore){
@@ -83,8 +87,8 @@ int releaseSemaphore(csem_t * semaphore){
 }
 
 int releaseThread(int tid){
-  csem_t * semaphore;
-  if(searchThreadSemaphore(tid, semaphore) == ERROR){ //Procura a thread na fila de semáforos
+  csem_t * semaphore = searchThreadSemaphore(tid);
+  if(semaphore == NULL){ //Procura a thread na fila de semáforos
     return ERROR;
   }
   if(FirstFila2(semaphore->fila) == ERROR){

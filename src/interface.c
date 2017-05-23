@@ -21,6 +21,7 @@ void initialize(){
   initReadyQueue();
   initBlockingQueue();
   initLongScheduler();
+  initializeSemaphores();
 }
 
 int ccreate (void* (*start)(void*), void *arg, int prio){
@@ -92,6 +93,9 @@ int csignal(csem_t *sem){
 }
 
 int cidentify (char *name, int size){
-  strcpy(name, "231060 G. Tassinari\n242276 V. Neto\n205680 J. Nakamura\n\0");
+  if(size < sizeof("231060 G. Tassinari\n242276 V. Neto\n205680 J. Nakamura\n")){
+    return ERROR;
+  }
+  strcpy(name, "231060 G. Tassinari\n242276 V. Neto\n205680 J. Nakamura\n");
   return SUCCESS;
 }

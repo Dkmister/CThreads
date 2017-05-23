@@ -19,10 +19,27 @@ int main(){
   int t1 = ccreate((void*)&funct1, NULL, 0);
   int t2 = ccreate((void*)&funct2, NULL, 3);
   int t3 = ccreate((void*)&funct3, NULL, 1);
-  int t4 = ccreate((void*)&funct3, NULL, 1);
-  int t5 = ccreate((void*)&funct3, NULL, 1);
 
+  cjoin(t1);
+  cyield();
   cjoin(t2);
+
+  csem_t * semaforo = malloc(sizeof(csem_t));
+  csem_init(semaforo, 2);
+  printf("%d\n", semaforo->count);
+  cwait(semaforo);
+  cwait(semaforo);
+  printf("%d\n", semaforo->count);
+  cwait(semaforo);
+  csignal(semaforo);
+  csignal(semaforo);
+  printf("%d\n", semaforo->count);
+  cjoin(t3);
+
+
+  char * names = malloc(512);
+  cidentify(names, 512);
+  printf("%s", names);
 
   printf("\nFim\n");
 }

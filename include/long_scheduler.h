@@ -6,3 +6,4 @@
 
 int createNewThread(void * context, int prio);
 void initLongScheduler();
+int finishedThread(int tid);
