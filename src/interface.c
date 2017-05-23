@@ -24,7 +24,7 @@ void initialize(){
   initializeSemaphores();
 }
 
-int ccreate (void* (*start)(void*), void *arg, int prio, void * arg){
+int ccreate (void* (*start)(void*), void *arg, int prio){
   if(initialized == 0){
     initialize();
   }
