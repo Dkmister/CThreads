@@ -5,19 +5,23 @@
 #include <stdlib.h>
 
 
-
-//  sao criadas as filas aqui mesmo
-//  ou aqui só tem funções e as filas ficam sei la onde?
 PFILA2 pFilap0 = NULL;
 PFILA2 pFilap1 = NULL;
 PFILA2 pFilap2 = NULL;
 PFILA2 pFilap3 = NULL;
 
 
-CreateFila2(pFilap0);
-CreateFila2(pFilap1);
-CreateFila2(pFilap2);
-CreateFila2(pFilap3);
+void initReadyQueue(){
+  pFilap0 = malloc(sizeof(FILA2));
+  pFilap1 = malloc(sizeof(FILA2));
+  pFilap2 = malloc(sizeof(FILA2));
+  pFilap3 = malloc(sizeof(FILA2));
+
+  CreateFila2(pFilap0);
+  CreateFila2(pFilap1);
+  CreateFila2(pFilap2);
+  CreateFila2(pFilap3);
+}
 
 /* retorna -1 se der erro
 retorn 0 se conseguir
@@ -30,23 +34,25 @@ int addThreadToReadyQueue(TCB_t * thread)
   {
     // caso prioridade é 0
     case 0:
-    correctQueue = pFilap0;
-    break;
+      correctQueue = pFilap0;
+      break;
     // caso prioridade é 1
     case 1:
-    correctQueue = pFilap1;
-    break;
+      correctQueue = pFilap1;
+      break;
     // caso prioridade é 2
     case 2:
-    correctQueue = pFilap2;
-    break;
+      correctQueue = pFilap2;
+      break;
     // caso prioridade é 3
     case 3:
-    correctQueue = pFilap3;
-    break;
+      correctQueue = pFilap3;
+      break;
     default:
-    return ERROR;
+      return ERROR;
+      break;
   }
+
 
   if(AppendFila2(correctQueue, thread) == ERROR){
     return ERROR;
@@ -66,13 +72,13 @@ TCB_t * getNextThreadToExecute()
 
   PFILA2 firstNotEmptyQueue;
 
-  if(FirstFila2(pFilap0) == SUCCESS){
+  if(FirstFila2(pFilap0) == 0){
     firstNotEmptyQueue = pFilap0;
-  }else if(FirstFila2(pFilap1) == SUCCESS){
+  }else if(FirstFila2(pFilap1) == 0){
     firstNotEmptyQueue = pFilap1;
-  }else if(FirstFila2(pFilap2) == SUCCESS){
+  }else if(FirstFila2(pFilap2) == 0){
     firstNotEmptyQueue = pFilap2;
-  }else if(FirstFila2(pFilap3) == SUCCESS){
+  }else if(FirstFila2(pFilap3) == 0){
     firstNotEmptyQueue = pFilap3;
   }else{
     return NULL;
