@@ -73,4 +73,4 @@ thread_mock:
 	$(CC) $(MOCKS_DIR)/thread.c -c -o $(MOCKS_BIN_DIR)/thread -Wall
 #-------------------------_clean_--------------------------------
 clean:
-	rm -rf $(LIB_DIR)/*.a $(BIN_DIR)/*.o $(SRC_DIR)/*~ $(INC_DIR)/*~ *~
+	rm -rf $(LIB_DIR)/*.a $(BIN_DIR)/*  $(SRC_DIR)/*~ $(INC_DIR)/*~ *~ & cp ./support.o $(BIN_DIR)/support.o
